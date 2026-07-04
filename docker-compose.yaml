@@ -21,27 +21,27 @@ services:
     volumes:
       - ./backend:/app
 
-#   pgql:
-#     image: postgres:15.18
-#     container_name: pgql
-#     depends_on:
-#       - app
-#       - nginx
-#     networks:
-#       - server_net
-#     volumes:
-#       - db:/var/lib/postgresql/data
-#     environment:
-#       - POSTGRES_DB=db
-#       - POSTGRES_USER=secret
-#       - POSTGRES_PASSWORD=secret
-#       - POSTGRES_ROOT_PASSWORD=secret
-#     ports:
-#       - "7001:5432"
+  pgql:
+    image: postgres:15.18
+    container_name: pgql
+    depends_on:
+      - app
+      - nginx
+    networks:
+      - server_net
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=db
+      - POSTGRES_USER=secret
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_ROOT_PASSWORD=secret
+    ports:
+      - "7001:5432"
 
-# volumes:
-#   db:
-#     driver: local
+volumes:
+  db:
+    driver: local
 
 networks:
   server_net:
