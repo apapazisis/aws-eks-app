@@ -37,7 +37,7 @@ services:
       - POSTGRES_PASSWORD=secret
       - POSTGRES_ROOT_PASSWORD=secret
     ports:
-      - "7001:5432"
+      - "5423:5432"
 
 volumes:
   db:
