@@ -14,10 +14,12 @@ services:
 
   app:
     container_name: app
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
     networks:
       - server_net
-    working_dir: /app
     volumes:
       - ./backend:/app
 

@@ -1,6 +1,21 @@
-FROM php:8.5.7-fpm
+FROM composer:2.10.2 AS deps
 
-RUN apt-get update && apt-get install -y \
+WORKDIR /app
+
+COPY composer.json .
+COPY composer.lock .
+
+RUN composer install --prefer-dist --no-dev --no-autoloader --no-scripts
+
+COPY . .
+
+RUN composer dump-autoload --optimize --no-dev --no-scripts
+
+
+
+FROM php:8.5.7-fpm AS project
+
+RUN apt update && apt install -y \
     unzip \
     libzip-dev \
     libpq-dev
@@ -8,7 +23,24 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-install -j$(nproc) \
     pdo_pgsql
 
-# Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer config --global repo.packagist composer https://packagist.org
-ENV PATH="$PATH:/root/.composer/vendor/bin"
+WORKDIR /app
+
+COPY . .
+COPY --from=deps /app/vendor ./vendor
+
+RUN php artisan package:discover --ansi \
+    && chown -R www-data:www-data storage bootstrap/cache
+
+
+
+FROM project AS production
+
+USER www-data
+
+EXPOSE 9000
+
+
+
+FROM project AS development
+
+EXPOSE 9000
