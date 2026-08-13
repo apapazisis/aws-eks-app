@@ -13,13 +13,11 @@ permissions:
 env:
   AWS_REGION: eu-central-1
   WORKING_DIR: backend
+  ECR_REPOSITORY: eks-repo
 
 jobs:
-  plan:
+  build-and-push:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ${{ env.WORKING_DIR }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -32,3 +30,32 @@ jobs:
 
       - name: Verify identity
         run: aws sts get-caller-identity
+
+      - name: Login to Amazon ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build image
+        uses: docker/build-push-action@v7
+        with:
+          context: ${{ env.WORKING_DIR }}
+          target: production
+          push: false
+          load: true
+          tags: ${{ steps.ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: false
+
+      - name: Inspect image
+        run: |
+          IMAGE="${{ steps.ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}"
+          docker image inspect "$IMAGE" --format 'user={{.Config.User}} size={{.Size}}'
+          docker run --rm "$IMAGE" php -v | head -1
+          {
+            echo "Built (not pushed) \`$IMAGE\`"
+            docker image inspect "$IMAGE" --format 'Size: {{.Size}} bytes, User: {{.Config.User}}'
+          } >> "$GITHUB_STEP_SUMMARY"
