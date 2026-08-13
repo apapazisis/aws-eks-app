@@ -1,16 +1,17 @@
-name: Push new image to AWS Test
+name: Push new docker image to AWS Test
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   id-token: write
   contents: read
 
 env:
-  AWS_REGION: us-east-1
+  AWS_REGION: eu-central-1
   WORKING_DIR: backend
 
 jobs:
