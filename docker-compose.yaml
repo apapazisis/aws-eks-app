@@ -39,7 +39,17 @@ services:
       - POSTGRES_PASSWORD=secret
       - POSTGRES_ROOT_PASSWORD=secret
     ports:
-      - "5423:5432"
+      - "5432:5432"
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok
+    depends_on:
+      - nginx
+    network_mode: host
+    environment:
+      - NGROK_AUTHTOKEN=
+    command: http 8000 --url=https://nontransposable-undisconnectedly-weston.ngrok-free.dev --log=stdout --log-level=debug
 
 volumes:
   db:
