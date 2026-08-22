@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -15,7 +14,7 @@ class GithubController
         return Socialite::driver('github')->scopes([])->redirect();
     }
 
-    public function callback()
+    public function callback(Request $request)
     {
          try {
             $ghUser = Socialite::driver('github')->user();
@@ -24,27 +23,49 @@ class GithubController
                 ->with('error', 'Η σύνδεση απέτυχε: ' . $e->getMessage());
         }
 
-        $user = User::updateOrCreate(
-            ['github_id' => $ghUser->getId()],
-            [
-                'github_name'          => $ghUser->getName() ?: $ghUser->getNickname(),
-                'login'                => $ghUser->getNickname(),
-                'avatar_url'           => $ghUser->getAvatar(),
-                'github_email'         => $ghUser->getEmail(),
-                'github_token'         => $ghUser->token,
-                'github_refresh_token' => $ghUser->refreshToken,
-                'token_expires_at'     => now()->addSeconds($ghUser->expiresIn ?? 28800),
-            ]
-        );
+        $user = $request->user();
+
+        $linkedElsewhere = User::where('github_id', $ghUser->getId())
+            ->whereKeyNot($user->getKey())
+            ->exists();
+
+        if ($linkedElsewhere) {
+            return redirect()->route('home')
+                ->with('error', 'Αυτός ο λογαριασμός GitHub είναι ήδη συνδεδεμένος με άλλον χρήστη.');
+        }
+
+        $user->update([
+            'github_id'            => $ghUser->getId(),
+            'github_name'          => $ghUser->getName() ?: $ghUser->getNickname(),
+            'login'                => $ghUser->getNickname(),
+            'avatar_url'           => $ghUser->getAvatar(),
+            'github_email'         => $ghUser->getEmail(),
+            'github_token'         => $ghUser->token,
+            'github_refresh_token' => $ghUser->refreshToken,
+            'token_expires_at'     => now()->addSeconds($ghUser->expiresIn ?? 28800),
+        ]);
 
         return redirect()->away('https://github.com/apps/review-apps-apo/installations/new');
     }
 
-    public function logout()
+    /**
+     * Αποσυνδέει μόνο τον λογαριασμό GitHub — η συνεδρία της εφαρμογής παραμένει ενεργή.
+     */
+    public function disconnect(Request $request)
     {
-        Auth::logout();
+        $request->user()->update([
+            'github_id'            => null,
+            'github_name'          => null,
+            'login'                => null,
+            'avatar_url'           => null,
+            'github_email'         => null,
+            'github_token'         => null,
+            'github_refresh_token' => null,
+            'token_expires_at'     => null,
+        ]);
 
-        return redirect()->route('home');
+        return redirect()->route('home')
+            ->with('status', 'Ο λογαριασμός GitHub αποσυνδέθηκε.');
     }
 
     public function search(Request $request)
@@ -53,10 +74,10 @@ class GithubController
             'q' => ['required', 'string', 'min:2', 'max:200'],
         ]);
 
-        $user  = Auth::user();
+        $user  = $request->user();
         $query = $validated['q'];
 
-        if (! $user) {
+        if (! $user?->github_id) {
             return response()->json(['message' => 'Χρειάζεται σύνδεση με GitHub.'], 401);
         }
 
@@ -67,7 +88,7 @@ class GithubController
             ->timeout(15)
             ->baseUrl('https://api.github.com');
 
-        if ($user?->github_token) {
+        if ($user->github_token) {
             $client = $client->withToken($user->github_token);
         }
 

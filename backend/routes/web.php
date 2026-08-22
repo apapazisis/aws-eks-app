@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use App\Http\Controllers\LoginController;
 
-Route::group(['middleware' => ['guest']], function () {
+Route::group(['middleware' => ['guest']], function ()
+{
     Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);
 });
