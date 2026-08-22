@@ -39,7 +39,7 @@ class GithubController
 
         Auth::login($user);
 
-        return redirect()->route('home')->with('success', 'Επιτυχής σύνδεση με το GitHub!');
+        return redirect()->away('https://github.com/apps/review-apps-apo/installations/new');
     }
 
     public function logout()
