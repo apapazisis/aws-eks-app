@@ -16,6 +16,7 @@ Route::group(['middleware' => ['guest']], function () {
 
 Route::group(['middleware' => ['auth']], function ()
 {
+    Route::get('/home', [LoginController::class, 'home'])->name('home');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
     Route::get('/auth/github', [GithubController::class, 'redirect'])->name('auth.redirect');
