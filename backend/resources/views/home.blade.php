@@ -24,14 +24,28 @@
             * { box-sizing: border-box; }
 
             body {
-                margin: 0; padding: 2rem 1rem 4rem;
+                margin: 0; padding: 0 0 4rem;
                 background: var(--bg); color: var(--text);
                 font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
                 font-size: 14px; line-height: 1.5;
                 -webkit-font-smoothing: antialiased;
             }
 
-            .wrap { max-width: 720px; margin: 0 auto; }
+            .wrap { max-width: 720px; margin: 0 auto; padding: 0 1rem; }
+
+            .topbar {
+                background: var(--panel); border-bottom: 1px solid var(--border);
+                margin-bottom: 2rem;
+            }
+
+            .topbar .wrap {
+                display: flex; align-items: center; gap: .75rem;
+                padding-top: .75rem; padding-bottom: .75rem;
+            }
+
+            .brand { font-weight: 600; }
+            .who { flex: 1; color: var(--muted); font-size: 12px; }
+
             h1 { font-size: 1.5rem; margin: 0 0 .25rem; }
             .subtitle { color: var(--muted); margin: 0 0 1.5rem; }
 
@@ -39,6 +53,8 @@
                 background: var(--panel); border: 1px solid var(--border);
                 border-radius: 10px; padding: 1.25rem; margin-bottom: 1rem;
             }
+
+            .card-title { font-weight: 600; margin: 0 0 .75rem; }
 
             .row { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
 
@@ -56,7 +72,21 @@
                 border-color: var(--border); font-weight: 500;
             }
 
+            .btn-danger {
+                background: transparent; color: var(--danger);
+                border-color: var(--border); font-weight: 500;
+            }
+
+            .btn-danger:hover { border-color: var(--danger); opacity: 1; }
+
+            .inline-form { display: inline; margin: 0; }
+
             .avatar { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); }
+
+            .badge {
+                display: inline-block; padding: .1rem .5rem; border-radius: 999px;
+                border: 1px solid var(--border); color: var(--muted); font-size: 12px;
+            }
 
             .search { display: flex; gap: .5rem; }
 
@@ -67,8 +97,7 @@
             }
 
             input[type="search"]:focus { outline: none; border-color: var(--accent); }
-
-            label.only-mine { display: inline-flex; align-items: center; gap: .4rem; color: var(--muted); margin-top: .75rem; }
+            input[type="search"]:disabled { opacity: .6; cursor: not-allowed; }
 
             ul.results { list-style: none; margin: 1rem 0 0; padding: 0; }
             ul.results li { padding: .85rem 0; border-top: 1px solid var(--border); }
@@ -84,6 +113,21 @@
         </style>
     </head>
     <body>
+        @php
+            $user = auth()->user();
+            $fullName = trim(($user->first_name ?? '') . ' ' . ($user->last_name ?? ''));
+            $githubConnected = (bool) $user->github_id;
+        @endphp
+
+        <header class="topbar">
+            <div class="wrap">
+                <span class="brand">{{ config('app.name', 'Laravel') }}</span>
+                <span class="who">{{ $fullName !== '' ? $fullName : $user->email }}</span>
+
+                <a href="{{ route('logout') }}" class="btn btn-danger">Αποσύνδεση</a>
+            </div>
+        </header>
+
         <div class="wrap">
             <h1>GitHub Repository Search</h1>
             <p class="subtitle">Συνδέσου με το GitHub και αναζήτησε repositories.</p>
@@ -94,32 +138,47 @@
                 </div>
             @endif
 
+            @if (session('status'))
+                <div class="card" style="border-color: var(--accent);">
+                    {{ session('status') }}
+                </div>
+            @endif
+
             <div class="card">
-                @auth
+                <p class="card-title">Σύνδεση με GitHub</p>
+
+                @if ($githubConnected)
                     <div class="row">
-                        @if (auth()->user()->avatar_url)
-                            <img class="avatar" src="{{ auth()->user()->avatar_url }}" alt="">
+                        @if ($user->avatar_url)
+                            <img class="avatar" src="{{ $user->avatar_url }}" alt="">
                         @endif
                         <div style="flex: 1;">
-                            <strong>{{ auth()->user()->name ?: auth()->user()->login }}</strong>
-                            <div style="color: var(--muted);">&#64;{{ auth()->user()->login }}</div>
+                            <strong>{{ $user->github_name ?: $user->login }}</strong>
+                            <div style="color: var(--muted);">&#64;{{ $user->login }}</div>
                         </div>
-                        <a href="{{ route('auth.logout') }}" class="btn btn-ghost">Αποσύνδεση</a>
+                        <span class="badge">Συνδεδεμένο</span>
+
+                        <form class="inline-form" method="POST" action="{{ route('github.disconnect') }}">
+                            @csrf
+                            <button type="submit" class="btn btn-ghost">Αποσύνδεση από GitHub</button>
+                        </form>
                     </div>
                 @else
                     <div class="row">
-                        <a href="{{ url('/auth/github') }}" class="btn">
+                        <a href="{{ route('auth.redirect') }}" class="btn">
                             <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
                                 <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
                             </svg>
                             Authenticate with GitHub
                         </a>
-                        <span style="color: var(--muted);">Χωρίς σύνδεση η αναζήτηση καλύπτει μόνο δημόσια repos.</span>
+                        <span style="color: var(--muted);">Χρειάζεται σύνδεση με GitHub για την αναζήτηση repositories.</span>
                     </div>
-                @endauth
+                @endif
             </div>
 
             <div class="card">
+                <p class="card-title">Αναζήτηση repositories</p>
+
                 <form class="search" id="search-form" onsubmit="return false;">
                     <input
                         type="search"
@@ -128,11 +187,16 @@
                         placeholder="Αναζήτηση repositories… (π.χ. laravel queue)"
                         autocomplete="off"
                         value="{{ request('q') }}"
+                        @disabled(! $githubConnected)
                     >
-                    <button type="submit" class="btn">Αναζήτηση</button>
+                    <button type="submit" class="btn" @disabled(! $githubConnected)>Αναζήτηση</button>
                 </form>
 
-                <p class="hint">Η αναζήτηση ξεκινά αυτόματα καθώς πληκτρολογείς.</p>
+                @if ($githubConnected)
+                    <p class="hint">Η αναζήτηση ξεκινά αυτόματα καθώς πληκτρολογείς.</p>
+                @else
+                    <p class="hint">Σύνδεσε πρώτα τον λογαριασμό σου στο GitHub.</p>
+                @endif
 
                 <p class="status" id="search-status"></p>
                 <ul class="results" id="results"></ul>
@@ -141,7 +205,6 @@
 
         <script>
             const input    = document.getElementById('q');
-            const mine     = document.getElementById('mine');
             const results  = document.getElementById('results');
             const statusEl = document.getElementById('search-status');
             const endpoint = '/github/search';
@@ -180,8 +243,6 @@
             async function search() {
                 const q = input.value.trim();
 
-                console.log('Searching for:', q, 'mine:', mine?.checked);
-
                 if (controller) controller.abort();
 
                 if (q.length < 2) {
@@ -194,7 +255,6 @@
                 setStatus('Αναζήτηση…');
 
                 const params = new URLSearchParams({ q });
-                if (mine && mine.checked) params.set('mine', '1');
 
                 try {
                     const response = await fetch(`${endpoint}?${params}`, {
@@ -228,9 +288,7 @@
                 search();
             });
 
-            if (mine) mine.addEventListener('change', search);
-
-            if (input.value.trim()) search();
+            if (!input.disabled && input.value.trim()) search();
         </script>
     </body>
 </html>

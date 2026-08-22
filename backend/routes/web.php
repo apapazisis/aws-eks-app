@@ -17,11 +17,11 @@ Route::group(['middleware' => ['guest']], function () {
 Route::group(['middleware' => ['auth']], function ()
 {
     Route::get('/home', [LoginController::class, 'home'])->name('home');
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
     Route::get('/auth/github', [GithubController::class, 'redirect'])->name('auth.redirect');
     Route::get('/auth/github/callback', [GithubController::class, 'callback'])->name('auth.callback');
-    Route::get('/auth/logout', [GithubController::class, 'logout'])->name('auth.logout');
+    Route::post('/auth/github/disconnect', [GithubController::class, 'disconnect'])->name('github.disconnect');
     Route::get('/github/search', [GithubController::class, 'search'])->name('github.search');
 });
 

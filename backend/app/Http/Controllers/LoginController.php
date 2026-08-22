@@ -30,7 +30,7 @@ class LoginController
         ])->onlyInput('email');
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
 
