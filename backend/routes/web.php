@@ -5,6 +5,7 @@ use App\Http\Controllers\GithubController;
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 
 Route::get('/', function () {
     return view('welcome');
@@ -14,3 +15,12 @@ Route::get('/auth/github', [GithubController::class, 'redirect'])->name('auth.re
 Route::get('/auth/github/callback', [GithubController::class, 'callback'])->name('auth.callback');
 Route::get('/auth/logout', [GithubController::class, 'logout'])->name('auth.logout');
 Route::get('/github/search', [GithubController::class, 'search'])->name('github.search');
+
+
+Route::post('/webhook', function () {
+    $payload = request()->getContent();
+    $signature = request()->header('X-Hub-Signature-256');
+    $secret = env('GITHUB_WEBHOOK_SECRET');
+
+    return response('Webhook received', 200);
+})->withoutMiddleware([PreventRequestForgery::class])->name('webhook');
