@@ -6,15 +6,24 @@ use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
+use App\Http\Controllers\LoginController;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::group(['middleware' => ['guest']], function () {
+    Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login']);
+});
 
-Route::get('/auth/github', [GithubController::class, 'redirect'])->name('auth.redirect');
-Route::get('/auth/github/callback', [GithubController::class, 'callback'])->name('auth.callback');
-Route::get('/auth/logout', [GithubController::class, 'logout'])->name('auth.logout');
-Route::get('/github/search', [GithubController::class, 'search'])->name('github.search');
+
+Route::group(['middleware' => ['auth']], function ()
+{
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    Route::get('/auth/github', [GithubController::class, 'redirect'])->name('auth.redirect');
+    Route::get('/auth/github/callback', [GithubController::class, 'callback'])->name('auth.callback');
+    Route::get('/auth/logout', [GithubController::class, 'logout'])->name('auth.logout');
+    Route::get('/github/search', [GithubController::class, 'search'])->name('github.search');
+});
+
 
 
 Route::post('/webhook', function () {

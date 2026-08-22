@@ -27,17 +27,15 @@ class GithubController
         $user = User::updateOrCreate(
             ['github_id' => $ghUser->getId()],
             [
-                'name'                 => $ghUser->getName() ?: $ghUser->getNickname(),
+                'github_name'          => $ghUser->getName() ?: $ghUser->getNickname(),
                 'login'                => $ghUser->getNickname(),
                 'avatar_url'           => $ghUser->getAvatar(),
-                'email'                => $ghUser->getEmail(),
+                'github_email'         => $ghUser->getEmail(),
                 'github_token'         => $ghUser->token,
                 'github_refresh_token' => $ghUser->refreshToken,
                 'token_expires_at'     => now()->addSeconds($ghUser->expiresIn ?? 28800),
             ]
         );
-
-        Auth::login($user);
 
         return redirect()->away('https://github.com/apps/review-apps-apo/installations/new');
     }
