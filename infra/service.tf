@@ -9,7 +9,7 @@ resource "kubernetes_service_v1" "backend" {
       app = "backend"
     }
     port {
-      port = 8000
+      port = 80
     }
     type = "ClusterIP"
   }
