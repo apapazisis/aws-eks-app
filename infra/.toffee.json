@@ -1,0 +1,5 @@
+{
+  "vars_dir": "vars",
+  "terraform_path": "terraform",
+  "auto_approve": false
+}

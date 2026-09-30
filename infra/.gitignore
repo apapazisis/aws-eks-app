@@ -1,0 +1,15 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfplan
+tfplan
+.terraformrc
+terraform.rc
+
+# Toffee metadata and saved-plan records.
+.toffee/
+?*.toffee.json
+

@@ -1,0 +1,4 @@
+bucket  = "apapazisis-test-terraform-state"
+key     = "test/aws-eks-app.tfstate"
+region  = "eu-central-1"
+encrypt = false
