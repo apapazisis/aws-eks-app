@@ -1,19 +1,7 @@
-### Documentation
-- The backend folder contains the laravel 13 application.
+The terraform code related with the app. Here we include k8s namespace, service, ingress.
+Here there is an example similar to what we have in this repository
+- https://github.com/akhileshmishrabiz/k8s-may26/tree/main/3-tier-app/k8s/menifests
+- https://github.com/akhileshmishrabiz/k8s-may26/blob/main/3-tier-app/infra/k8s.tf
 
-###
-- ECR
-- RDS
-- INGRESS
--
-
-
-
-- the terraform code related with the app
-Create that resources
-https://github.com/akhileshmishrabiz/April26-bootcamp/blob/main/day13-ecs-3-tier/infra/readme.md
-
-
-- the kubernetes yaml resources related with the app.
-Create that resources
-https://github.com/akhileshmishrabiz/k8s-may26/tree/main/3-tier-app/k8s/menifests
+Another example can be found in the below repository:
+- https://github.com/akhileshmishrabiz/April26-bootcamp/blob/main/day13-ecs-3-tier/infra/readme.md
