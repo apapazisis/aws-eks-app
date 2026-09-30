@@ -30,7 +30,7 @@ resource "kubernetes_ingress_v1" "app_ingress_tls" {
   }
 
   depends_on = [
-    kubernetes_namespace.namespace,
+    kubernetes_namespace_v1.namespace,
     aws_acm_certificate_validation.cert_api
   ]
 
@@ -43,25 +43,11 @@ resource "kubernetes_ingress_v1" "app_ingress_tls" {
       http {
         # Route for backend API
         path {
-          path      = "/api"
-          path_type = "Prefix"
-          backend {
-            service {
-              name = kubernetes_service.backend.metadata[0].name
-              port {
-                number = 8000
-              }
-            }
-          }
-        }
-
-        # Route for frontend (default)
-        path {
           path      = "/"
           path_type = "Prefix"
           backend {
             service {
-              name = kubernetes_service.frontend.metadata[0].name
+              name = kubernetes_service_v1.backend.metadata[0].name
               port {
                 number = 80
               }
