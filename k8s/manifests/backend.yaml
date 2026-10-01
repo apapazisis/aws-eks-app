@@ -28,7 +28,7 @@ spec:
           command: ['sh', '-c', 'until nslookup devopsdozo-db.cvik8accw2tk.ap-south-1.rds.amazonaws.com; do echo waiting for database; sleep 2; done;']
       containers:
         - name: backend
-          image: 935478558711.dkr.ecr.eu-central-1.amazonaws.com/dev-app:339c55e9a69065061b8e76e756651e5ec2b44e32
+          image: 935478558711.dkr.ecr.eu-central-1.amazonaws.com/dev-app:a6395f7e2486384fb70a49acc20b7d09650b88ac
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
@@ -77,4 +77,4 @@ spec:
   template:
     spec:
       containers:
-        - image: 935478558711.dkr.ecr.eu-central-1.amazonaws.com/dev-app:339c55e9a69065061b8e76e756651e5ec2b44e32
+        - image: 935478558711.dkr.ecr.eu-central-1.amazonaws.com/dev-app:a6395f7e2486384fb70a49acc20b7d09650b88ac
