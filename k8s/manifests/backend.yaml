@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  namespace: 3-tier-app-eks
+  namespace: 3-tier-app
   labels:
     app: backend
 spec:
@@ -57,24 +57,3 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "500m"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: backend
-  namespace: 3-tier-app-eks
-  labels:
-    app: backend
-spec:
-  type: ClusterIP
-  selector:
-    app: backend
-  ports:
-    - name: http
-      port: 8000
-      targetPort: 8000
-      protocol: TCP
-  template:
-    spec:
-      containers:
-        - image: 935478558711.dkr.ecr.eu-central-1.amazonaws.com/dev-app:a76e0bc7f18cb45ce21fd0b4dda3603a122e0c55
