@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+# this is a comment
+
 class LoginController
 {
     public function showLoginForm()
