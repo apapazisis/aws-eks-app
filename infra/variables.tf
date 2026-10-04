@@ -32,3 +32,8 @@ variable "domain_name" {
   description = "Domain name for the application."
   type        = string
 }
+
+variable "argocd_subdomain" {
+  description = "Subdomain for the ArgoCD application."
+  type        = string
+}

@@ -1,6 +1,6 @@
 resource "kubernetes_ingress_v1" "argocd_ingress_tls" {
   metadata {
-    name      = "argocd-ingress"
+    name      = "${var.argocd_subdomain}-ingress"
     namespace = "argocd"
     annotations = {
       # ALB configuration
@@ -10,7 +10,7 @@ resource "kubernetes_ingress_v1" "argocd_ingress_tls" {
       # SSL/TLS configuration
       "alb.ingress.kubernetes.io/listen-ports"    = "[{\"HTTP\": 80}, {\"HTTPS\": 443}]"
       "alb.ingress.kubernetes.io/ssl-redirect"    = "443"
-      "alb.ingress.kubernetes.io/certificate-arn" = aws_acm_certificate.microservices_cert.arn
+      "alb.ingress.kubernetes.io/certificate-arn" = aws_acm_certificate.argocd_tls.arn
 
       # Health check configuration
       "alb.ingress.kubernetes.io/healthcheck-path"     = "/"
@@ -20,7 +20,7 @@ resource "kubernetes_ingress_v1" "argocd_ingress_tls" {
       "alb.ingress.kubernetes.io/load-balancer-attributes" = "idle_timeout.timeout_seconds=60"
 
       # Tags for the ALB
-      "alb.ingress.kubernetes.io/tags" = "Environment=production,ManagedBy=Terraform,Name=${var.app_subdomain}-ingress"
+      "alb.ingress.kubernetes.io/tags" = "Environment=production,ManagedBy=Terraform,Name=${var.argocd_subdomain}-ingress"
 
       # ALB group annotation
       "alb.ingress.kubernetes.io/group.name" = "argocd-ingress-group"
@@ -29,7 +29,7 @@ resource "kubernetes_ingress_v1" "argocd_ingress_tls" {
 
   depends_on = [
     kubernetes_namespace_v1.argocd,
-    aws_acm_certificate_validation.app,
+    aws_acm_certificate_validation.argocd_tls,
     helm_release.argocd
   ]
 
@@ -39,7 +39,7 @@ resource "kubernetes_ingress_v1" "argocd_ingress_tls" {
 
     tls {
       hosts = [
-        "argocd.${var.app_subdomain}.${var.domain_name}"
+        "${var.argocd_subdomain}.${var.domain_name}"
       ]
     }
 

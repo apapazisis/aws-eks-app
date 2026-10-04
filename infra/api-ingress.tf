@@ -1,6 +1,6 @@
 resource "kubernetes_ingress_v1" "app_ingress_tls" {
   metadata {
-    name      = "${var.app_subdomain}-ingress"
+    name      = "${var.api_subdomain}-ingress"
     namespace = var.app_namepace
     annotations = {
       # ALB configuration
@@ -22,7 +22,7 @@ resource "kubernetes_ingress_v1" "app_ingress_tls" {
       "alb.ingress.kubernetes.io/load-balancer-attributes" = "idle_timeout.timeout_seconds=60"
 
       # Tags for the ALB
-      "alb.ingress.kubernetes.io/tags" = "Environment=${var.environment},ManagedBy=Terraform,Name=${var.app_subdomain}-ingress"
+      "alb.ingress.kubernetes.io/tags" = "Environment=${var.environment},ManagedBy=Terraform,Name=${var.api_subdomain}-ingress"
 
       # ALB group annotation
       "alb.ingress.kubernetes.io/group.name" = "api-ingress-group"
@@ -38,7 +38,7 @@ resource "kubernetes_ingress_v1" "app_ingress_tls" {
     ingress_class_name = "alb"
 
     rule {
-      host = "${var.app_subdomain}.${var.domain_name}"
+      host = "${var.api_subdomain}.${var.domain_name}"
 
       http {
         # Route for backend API
