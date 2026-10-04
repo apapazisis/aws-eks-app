@@ -23,7 +23,7 @@ resource "kubernetes_ingress_v1" "argocd_ingress_tls" {
       "alb.ingress.kubernetes.io/tags" = "Environment=production,ManagedBy=Terraform,Name=${var.app_subdomain}-ingress"
 
       # ALB group annotation
-      "alb.ingress.kubernetes.io/group.name" = var.alb_group_name
+      "alb.ingress.kubernetes.io/group.name" = "argocd-ingress-group"
     }
   }
 
