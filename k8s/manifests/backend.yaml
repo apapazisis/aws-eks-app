@@ -82,7 +82,7 @@ spec:
       volumes:
         - name: configs-volume
           configMap:
-            name: configs
+            name: backend-configs
             defaultMode: 0555
             items:
               - key: "nginx.conf"
@@ -93,7 +93,7 @@ spec:
                 path: "www.conf"
         - name: env-volume
           secret:
-            secretName: secrets
+            secretName: backend-secrets
             defaultMode: 0555
             items:
               - key: ".env"
