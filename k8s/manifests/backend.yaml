@@ -45,7 +45,7 @@ spec:
               memory: "512Mi"
               cpu: "1000m"
         - name: backend
-          image: 935478558711.dkr.ecr.eu-central-1.amazonaws.com/dev-app:a76e0bc7f18cb45ce21fd0b4dda3603a122e0c55
+          image: 935478558711.dkr.ecr.eu-central-1.amazonaws.com/dev-app:5d020eeb34a74100209d1a979cf0fc9dd5cd0db3
           imagePullPolicy: Always
           ports:
             - name: app
