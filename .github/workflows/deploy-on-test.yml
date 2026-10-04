@@ -63,7 +63,7 @@ jobs:
 
       - name: Update backend image
         working-directory: ${{ env.path }}
-        run: yq -i '.spec.template.spec.containers[0].image = "${{ env.backend_repo }}:${{ env.backend_tag }}"' backend.yaml
+        run: yq -i '(.spec.template.spec.containers[] | select(.name == "backend")).image = "${{ env.backend_repo }}:${{ env.backend_tag }}"' backend.yaml
 
       - name: Commit and push changes
         run: |
