@@ -10,7 +10,7 @@ resource "kubernetes_ingress_v1" "app_ingress_tls" {
       # SSL/TLS configuration
       "alb.ingress.kubernetes.io/listen-ports"    = "[{\"HTTP\": 80}, {\"HTTPS\": 443}]"
       "alb.ingress.kubernetes.io/ssl-redirect"    = "443"
-      "alb.ingress.kubernetes.io/certificate-arn" = aws_acm_certificate.cert_api.arn
+      "alb.ingress.kubernetes.io/certificate-arn" = aws_acm_certificate.api_tls.arn
 
       # Health check configuration
       "alb.ingress.kubernetes.io/healthcheck-path"     = "/"
