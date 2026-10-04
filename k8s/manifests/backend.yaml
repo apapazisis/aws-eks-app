@@ -48,25 +48,9 @@ spec:
           image: 935478558711.dkr.ecr.eu-central-1.amazonaws.com/dev-app:a76e0bc7f18cb45ce21fd0b4dda3603a122e0c55
           imagePullPolicy: Always
           ports:
-            - containerPort: 8000
-          env:
-            - name: ALLOWED_ORIGINS
-              value: "https://devopsdozo.livingdevops.org,http://devopsdozo.livingdevops.org"
-            - name: DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: backend-secrets
-                  key: DATABASE_URL
-            - name: SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: backend-secrets
-                  key: SECRET_KEY
-            - name: FLASK_DEBUG
-              valueFrom:
-                configMapKeyRef:
-                  name: backend-configmap
-                  key: FLASK_DEBUG
+            - name: app
+              containerPort: 9000
+              protocol: TCP
           resources:
             requests:
               memory: "256Mi"
