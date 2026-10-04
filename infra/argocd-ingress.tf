@@ -42,7 +42,7 @@ resource "kubernetes_ingress_v1" "argocd_ingress_tls" {
     }
 
     rule {
-      host = "${var.api_subdomain}.${var.domain_name}"
+      host = "${var.argocd_subdomain}.${var.domain_name}"
 
       http {
         path {
