@@ -28,9 +28,7 @@ resource "kubernetes_ingress_v1" "argocd_ingress_tls" {
   }
 
   depends_on = [
-    kubernetes_namespace_v1.argocd,
     aws_acm_certificate_validation.argocd_tls,
-    helm_release.argocd
   ]
 
   spec {
