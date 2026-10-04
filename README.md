@@ -5,3 +5,6 @@ Here there is an example similar to what we have in this repository
 
 Another example can be found in the below repository:
 - https://github.com/akhileshmishrabiz/April26-bootcamp/blob/main/day13-ecs-3-tier/infra/readme.md
+
+- Argocd default username is admin and a random password is saves in
+kubernetes secret argocd-initial-admin-secret

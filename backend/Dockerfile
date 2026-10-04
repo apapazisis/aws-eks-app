@@ -11,7 +11,7 @@ COPY . .
 
 RUN composer dump-autoload --optimize --no-dev --no-scripts
 
-
+#----------------------------------------------
 
 FROM php:8.5.7-fpm AS project
 
@@ -31,7 +31,7 @@ COPY --from=deps /app/vendor ./vendor
 RUN php artisan package:discover --ansi \
     && chown -R www-data:www-data storage bootstrap/cache
 
-
+#----------------------------------------------
 
 FROM project AS production
 
@@ -39,7 +39,7 @@ USER www-data
 
 EXPOSE 9000
 
-
+#----------------------------------------------
 
 FROM project AS development
 
