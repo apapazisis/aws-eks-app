@@ -31,7 +31,7 @@ resource "kubernetes_ingress_v1" "app_ingress_tls" {
 
   depends_on = [
     kubernetes_namespace_v1.namespace,
-    aws_acm_certificate_validation.cert_api
+    aws_acm_certificate_validation.api_tls
   ]
 
   spec {
