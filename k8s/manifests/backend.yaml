@@ -20,12 +20,12 @@ spec:
       labels:
         app: backend
     spec:
-      nodeSelector:
-        kubernetes.io/arch: amd64
-      initContainers:
-        - name: wait-for-db
-          image: busybox
-          command: ['sh', '-c', 'until nslookup devopsdozo-db.cvik8accw2tk.ap-south-1.rds.amazonaws.com; do echo waiting for database; sleep 2; done;']
+      # nodeSelector:
+      #   kubernetes.io/arch: amd64
+      # initContainers:
+      #   - name: wait-for-db
+      #     image: busybox
+      #     command: ['sh', '-c', 'until nslookup devopsdozo-db.cvik8accw2tk.ap-south-1.rds.amazonaws.com; do echo waiting for database; sleep 2; done;']
       containers:
         - name: backend
           image: 935478558711.dkr.ecr.eu-central-1.amazonaws.com/dev-app:a76e0bc7f18cb45ce21fd0b4dda3603a122e0c55
