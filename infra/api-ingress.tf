@@ -13,7 +13,7 @@ resource "kubernetes_ingress_v1" "app_ingress_tls" {
       "alb.ingress.kubernetes.io/certificate-arn" = aws_acm_certificate.api_tls.arn
 
       # Health check configuration
-      "alb.ingress.kubernetes.io/healthcheck-path"     = "/"
+      "alb.ingress.kubernetes.io/healthcheck-path"     = "/healthy"
       "alb.ingress.kubernetes.io/healthcheck-protocol" = "HTTP"
 
       "alb.ingress.kubernetes.io/ssl-policy" = "ELBSecurityPolicy-TLS13-1-2-Res-2021-06"
