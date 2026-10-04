@@ -1,7 +1,7 @@
 resource "kubernetes_ingress_v1" "argocd_ingress_tls" {
   metadata {
     name      = "${var.argocd_subdomain}-ingress"
-    namespace = "argocd"
+    namespace = var.argocd_namespace
     annotations = {
       # ALB configuration
       "alb.ingress.kubernetes.io/scheme"      = "internet-facing"

@@ -4,7 +4,7 @@ resource "kubernetes_manifest" "app" {
     kind       = "Application"
     metadata = {
       name      = "devopsdozo"
-      namespace = "argocd"
+      namespace = var.argocd_namespace
     }
     spec = {
       project = "default"

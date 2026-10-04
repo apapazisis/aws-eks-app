@@ -37,3 +37,8 @@ variable "argocd_subdomain" {
   description = "Subdomain for the ArgoCD application."
   type        = string
 }
+
+variable "argocd_namespace" {
+  description = "Kubernetes namespace for the ArgoCD application."
+  type        = string
+}
