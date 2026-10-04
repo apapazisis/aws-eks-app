@@ -1,7 +1,7 @@
 resource "kubernetes_service_v1" "backend" {
   metadata {
     name      = "backend"
-    namespace = var.app_namepace
+    namespace = var.api_namespace
   }
 
   spec {

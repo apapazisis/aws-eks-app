@@ -18,12 +18,12 @@ variable "eks_cluster_name" {
   type        = string
 }
 
-variable "app_subdomain" {
+variable "api_subdomain" {
   description = "Subdomain for the application."
   type        = string
 }
 
-variable "app_namepace" {
+variable "api_namespace" {
   description = "Kubernetes namespace for the application."
   type        = string
 }

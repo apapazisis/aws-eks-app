@@ -1,7 +1,7 @@
 resource "kubernetes_ingress_v1" "app_ingress_tls" {
   metadata {
     name      = "${var.api_subdomain}-ingress"
-    namespace = var.app_namepace
+    namespace = var.api_namespace
     annotations = {
       # ALB configuration
       "alb.ingress.kubernetes.io/scheme"      = "internet-facing"

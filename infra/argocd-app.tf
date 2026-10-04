@@ -15,7 +15,7 @@ resource "kubernetes_manifest" "app" {
       }
       destination = {
         server    = "https://kubernetes.default.svc"
-        namespace = var.app_namepace
+        namespace = var.api_namespace
       }
 
       syncPolicy = {
