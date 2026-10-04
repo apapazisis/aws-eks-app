@@ -44,10 +44,9 @@ resource "kubernetes_ingress_v1" "argocd_ingress_tls" {
     }
 
     rule {
-      host = "argocd.${var.app_subdomain}.${var.domain_name}"
+      host = "${var.api_subdomain}.${var.domain_name}"
 
       http {
-        # Route for backend API
         path {
           path      = "/"
           path_type = "Prefix"
