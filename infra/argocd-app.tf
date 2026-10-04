@@ -27,3 +27,4 @@ resource "kubernetes_manifest" "app" {
     }
   }
 }
+
