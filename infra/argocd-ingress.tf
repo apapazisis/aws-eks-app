@@ -16,11 +16,13 @@ resource "kubernetes_ingress_v1" "argocd_ingress_tls" {
       "alb.ingress.kubernetes.io/healthcheck-path"     = "/"
       "alb.ingress.kubernetes.io/healthcheck-protocol" = "HTTP"
 
+      "alb.ingress.kubernetes.io/ssl-policy" = "ELBSecurityPolicy-TLS13-1-2-Res-2021-06"
+
       # Load balancer attributes
       "alb.ingress.kubernetes.io/load-balancer-attributes" = "idle_timeout.timeout_seconds=60"
 
       # Tags for the ALB
-      "alb.ingress.kubernetes.io/tags" = "Environment=production,ManagedBy=Terraform,Name=${var.argocd_subdomain}-ingress"
+      "alb.ingress.kubernetes.io/tags" = "Environment=${var.environment},ManagedBy=Terraform,Name=${var.argocd_subdomain}-ingress"
 
       # ALB group annotation
       "alb.ingress.kubernetes.io/group.name" = "argocd-ingress-group"
