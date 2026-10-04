@@ -35,7 +35,7 @@ spec:
               readOnly: true
             - name: configs-volume
               subPath: index.php
-              mountPath: /var/www/html/public/index.php
+              mountPath: /app/public/index.php
               readOnly: true
           resources:
             requests:
@@ -65,17 +65,17 @@ spec:
               readOnly: true
             - name: env-volume
               subPath: .env
-              mountPath: /var/www/html/.env
+              mountPath: /app/.env
               readOnly: true
             - name: laravel-storage-logs-volume
-              mountPath: /var/www/html/storage/logs
+              mountPath: /app/storage/logs
               readOnly: false
             - name: laravel-storage-views-volume
-              mountPath: /var/www/html/storage/framework/views
+              mountPath: /app/storage/framework/views
               readOnly: false
             - name: bootstrap-cache-volume
               readOnly: false
-              mountPath: /var/www/html/bootstrap/cache
+              mountPath: /app/bootstrap/cache
             - name: tmp
               readOnly: false
               mountPath: /tmp

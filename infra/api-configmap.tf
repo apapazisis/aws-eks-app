@@ -9,7 +9,7 @@ resource "kubernetes_config_map_v1" "backend_configs" {
       server {
           listen 80;
           server_name localhost;
-          root /var/www/html/public;
+          root /app/public;
           index index.php;
 
           location /healthy {
