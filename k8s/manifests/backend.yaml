@@ -20,13 +20,30 @@ spec:
       labels:
         app: backend
     spec:
-      # nodeSelector:
-      #   kubernetes.io/arch: amd64
-      # initContainers:
-      #   - name: wait-for-db
-      #     image: busybox
-      #     command: ['sh', '-c', 'until nslookup devopsdozo-db.cvik8accw2tk.ap-south-1.rds.amazonaws.com; do echo waiting for database; sleep 2; done;']
       containers:
+        - name: nginx
+          image: nginx:1.27.4
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          volumeMounts:
+            - name: configs-volume
+              subPath: nginx.conf
+              mountPath: /etc/nginx/conf.d/default.conf
+              readOnly: true
+            - name: configs-volume
+              subPath: index.php
+              mountPath: /var/www/html/public/index.php
+              readOnly: true
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "500m"
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
         - name: backend
           image: 935478558711.dkr.ecr.eu-central-1.amazonaws.com/dev-app:a76e0bc7f18cb45ce21fd0b4dda3603a122e0c55
           imagePullPolicy: Always
@@ -57,3 +74,15 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "500m"
+      volumes:
+        - name: configs-volume
+          configMap:
+            name: configs
+            defaultMode: 0555
+            items:
+              - key: "nginx.conf"
+                path: "nginx.conf"
+              - key: "index.php"
+                path: "index.php"
+              - key: "www.conf"
+                path: "www.conf"
