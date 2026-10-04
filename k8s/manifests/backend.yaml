@@ -58,6 +58,27 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "500m"
+          volumeMounts:
+            - name: configs-volume
+              subPath: www.conf
+              mountPath: /usr/local/etc/php-fpm.d/www.conf
+              readOnly: true
+            - name: env-volume
+              subPath: .env
+              mountPath: /var/www/html/.env
+              readOnly: true
+            - name: laravel-storage-logs-volume
+              mountPath: /var/www/html/storage/logs
+              readOnly: false
+            - name: laravel-storage-views-volume
+              mountPath: /var/www/html/storage/framework/views
+              readOnly: false
+            - name: bootstrap-cache-volume
+              readOnly: false
+              mountPath: /var/www/html/bootstrap/cache
+            - name: tmp
+              readOnly: false
+              mountPath: /tmp
       volumes:
         - name: configs-volume
           configMap:
@@ -70,3 +91,18 @@ spec:
                 path: "index.php"
               - key: "www.conf"
                 path: "www.conf"
+        - name: env-volume
+          secret:
+            secretName: secrets
+            defaultMode: 0555
+            items:
+              - key: ".env"
+                path: ".env"
+        - name: laravel-storage-logs-volume
+          emptyDir: {}
+        - name: laravel-storage-views-volume
+          emptyDir: {}
+        - name: bootstrap-cache-volume
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
