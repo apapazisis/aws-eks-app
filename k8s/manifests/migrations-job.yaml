@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: api
+  name: migrations
+  annotations:
+    "helm.sh/hook-delete-policy": hook-succeeded
+    "helm.sh/hook": post-install, post-upgrade
+    #"argocd.argoproj.io/hook": "PreSync"
+    #"argocd.argoproj.io/hook-delete-policy": "BeforeHookCreation"
+    #"argocd.argoproj.io/job-cleanup": "keep"
+spec:
+  template:
+    metadata:
+      labels:
+        pod: migrations
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox
+          command: ['sh', '-c', 'until nslookup devopsdozo-db.cvik8accw2tk.ap-south-1.rds.amazonaws.com; do echo waiting for database; sleep 2; done;']
+      containers:
+        - name: database-migrations
+          image: "CHANGE_ME"
+          imagePullPolicy: Always
+          command:
+            - "/bin/sh"
+            - "-c"
+            - "php artisan migrate --force"
+          volumeMounts:
+            - mountPath: /app/.env
+              name: database-migrations
+              subPath: ".env"
+      restartPolicy: Never
+      volumes:
+        - name: database-migrations
+          secret:
+            secretName: database-migrations
+            defaultMode: 0555
+            items:
+              - key: ".env"
+                path: ".env"
+  backoffLimit: 0
