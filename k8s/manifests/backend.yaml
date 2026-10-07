@@ -20,6 +20,10 @@ spec:
       labels:
         app: backend
     spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox
+          command: ['sh', '-c', 'until nslookup devopsdozo-db.cvik8accw2tk.ap-south-1.rds.amazonaws.com; do echo waiting for database; sleep 2; done;']
       containers:
         - name: nginx
           image: nginx:1.27.4
