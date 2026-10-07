@@ -19,7 +19,7 @@ resource "kubernetes_secret_v1" "backend_secrets" {
       APP_MAINTENANCE_DRIVER=file
       # APP_MAINTENANCE_STORE=database
 
-      PHP_CLI_SERVER_WORKERS=4
+      # PHP_CLI_SERVER_WORKERS=4
 
       BCRYPT_ROUNDS=12
 
@@ -29,14 +29,13 @@ resource "kubernetes_secret_v1" "backend_secrets" {
       LOG_LEVEL=debug
 
       DB_CONNECTION=pgsql
-      DB_READ_HOST="CHANGE_ME"
-      DB_WRITE_HOST="CHANGE_ME"
-      DB_PORT=5432
-      DB_DATABASE="CHANGE_ME"
-      DB_USERNAME="CHANGE_ME"
-      DB_PASSWORD="CHANGE_ME"
+      # DB_HOST=127.0.0.1
+      # DB_PORT=3306
+      # DB_DATABASE=laravel
+      # DB_USERNAME=root
+      # DB_PASSWORD=
 
-      SESSION_DRIVER=cookie
+      SESSION_DRIVER=database
       SESSION_LIFETIME=120
       SESSION_ENCRYPT=false
       SESSION_PATH=/
@@ -52,8 +51,8 @@ resource "kubernetes_secret_v1" "backend_secrets" {
       MEMCACHED_HOST=127.0.0.1
 
       REDIS_CLIENT=phpredis
-      REDIS_HOST=CHANGE_ME
-      REDIS_PASSWORD="CHANGE_ME"
+      REDIS_HOST=127.0.0.1
+      REDIS_PASSWORD=null
       REDIS_PORT=6379
 
       MAIL_MAILER=log
@@ -63,7 +62,7 @@ resource "kubernetes_secret_v1" "backend_secrets" {
       MAIL_USERNAME=null
       MAIL_PASSWORD=null
       MAIL_FROM_ADDRESS="hello@example.com"
-      MAIL_FROM_NAME="$${APP_NAME}"
+      MAIL_FROM_NAME="${APP_NAME}"
 
       AWS_ACCESS_KEY_ID=
       AWS_SECRET_ACCESS_KEY=
@@ -71,7 +70,7 @@ resource "kubernetes_secret_v1" "backend_secrets" {
       AWS_BUCKET=
       AWS_USE_PATH_STYLE_ENDPOINT=false
 
-      VITE_APP_NAME="$${APP_NAME}"
+      VITE_APP_NAME="${APP_NAME}"
     EOT
   }
 
