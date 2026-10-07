@@ -65,10 +65,14 @@ jobs:
         working-directory: ${{ env.path }}
         run: yq -i '(.spec.template.spec.containers[] | select(.name == "backend")).image = "${{ env.backend_repo }}:${{ env.backend_tag }}"' backend.yaml
 
+      - name: Update migrations image
+        working-directory: ${{ env.path }}
+        run: yq -i '(.spec.template.spec.containers[] | select(.name == "database-migrations")).image = "${{ env.backend_repo }}:${{ env.backend_tag }}"' migrations-job.yaml
+
       - name: Commit and push changes
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git add ${{ env.path }}
-          git diff --cached --quiet || git commit -m "Update backend image to ${{ env.backend_tag }}"
+          git diff --cached --quiet || git commit -m "Update images to ${{ env.backend_tag }}"
           git push
