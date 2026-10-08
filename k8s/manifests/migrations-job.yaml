@@ -35,7 +35,7 @@ spec:
       volumes:
         - name: database-migrations
           secret:
-            secretName: database-migrations
+            secretName: database-migrations-secrets
             defaultMode: 0555
             items:
               - key: ".env"
