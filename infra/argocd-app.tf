@@ -20,8 +20,22 @@ resource "kubernetes_manifest" "app" {
 
       syncPolicy = {
         automated = {
-          prune    = true
-          selfHeal = true
+          enabled    = true
+          prune      = true
+          selfHeal   = true
+          allowEmpty = false
+        }
+        syncOptions = [
+          "ApplyOutOfSyncOnly=true",
+          "Validate=false"
+        ]
+        retry = {
+          limit = 5
+          backoff = {
+            duration    = "5s"
+            factor      = 2
+            maxDuration = "3m"
+          }
         }
       }
     }
