@@ -29,11 +29,11 @@ resource "kubernetes_secret_v1" "database_migrations_secrets" {
       LOG_LEVEL=debug
 
       DB_CONNECTION=pgsql
-      DB_HOST=${aws_db_instance.postgres.address}
-      DB_PORT=${aws_db_instance.postgres.port}
-      DB_DATABASE=laravel
-      DB_USERNAME=master
-      DB_PASSWORD=${aws_db_instance.postgres.password}
+      DB_HOST=${aws_db_instance.database.address}
+      DB_PORT=${aws_db_instance.database.port}
+      DB_DATABASE=${aws_db_instance.database.db_name}
+      DB_USERNAME=${aws_db_instance.database.username}
+      DB_PASSWORD=${aws_db_instance.database.password}
 
       SESSION_DRIVER=database
       SESSION_LIFETIME=120

@@ -68,6 +68,8 @@ resource "kubernetes_config_map_v1" "backend_configs" {
 
       $app->handleRequest(Request::capture());
     EOT
+
+    "DB_HOST" = aws_db_instance.database.address
   }
 
   depends_on = [kubernetes_namespace_v1.namespace]
