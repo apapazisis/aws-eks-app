@@ -29,11 +29,11 @@ resource "kubernetes_secret_v1" "backend_secrets" {
       LOG_LEVEL=debug
 
       DB_CONNECTION=pgsql
-      # DB_HOST=127.0.0.1
-      # DB_PORT=3306
-      # DB_DATABASE=laravel
-      # DB_USERNAME=root
-      # DB_PASSWORD=
+      DB_HOST=${aws_db_instance.postgres.address}
+      DB_PORT=${aws_db_instance.postgres.port}
+      DB_DATABASE=laravel
+      DB_USERNAME=master
+      DB_PASSWORD=${aws_db_instance.postgres.password}
 
       SESSION_DRIVER=database
       SESSION_LIFETIME=120
